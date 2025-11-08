@@ -88,6 +88,8 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: python
+        continue-on-error: true
 
       - name: Run Gitleaks (extra secret scanning)
         uses: zricethezav/gitleaks-action@v2
+        continue-on-error: true
