@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Install pip and Python dependencies
-RUN python -m pip install --no-cache-dir pip==22.0.4
+RUN python -m pip install --no-cache-dir pip==25.3
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
