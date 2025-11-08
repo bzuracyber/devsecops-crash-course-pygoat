@@ -24,7 +24,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run unit tests
-        run: pytest --junitxml=reports/test-results.xml
+        run: |
+          mkdir -p reports
+          pytest --junitxml=reports/test-results.xml
 
   sast:
     runs-on: ubuntu-latest
@@ -45,39 +47,39 @@ jobs:
         with:
           config: "p/ci"
 
-  sca:
-    dependency-review:
-      if: github.event_name == 'pull_request'
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout source
-          uses: actions/checkout@v4
-  
-        - name: Dependency Review
-          uses: actions/dependency-review-action@v4
+  # Dependency Review (PR-only)
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
 
   # Safety SCA (runs on push + PR)
-    safety-scan:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout source
-          uses: actions/checkout@v4
-  
-        - name: Set up Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: '3.11'
-  
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
-            pip install safety
-  
-        - name: Run Safety scan
-          run: |
-            mkdir -p reports
-            safety check --json > reports/sca-results.json
+  safety-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install safety
+
+      - name: Run Safety scan
+        run: |
+          mkdir -p reports
+          safety check --json > reports/sca-results.json
 
   container-scan:
     runs-on: ubuntu-latest
