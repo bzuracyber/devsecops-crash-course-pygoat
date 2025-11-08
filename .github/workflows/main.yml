@@ -43,12 +43,13 @@ jobs:
           config: "p/ci"
 
   sca:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Run Dependency Review (GitHub native SCA)
+      - name: Run Dependency Review
         uses: actions/dependency-review-action@v4
 
       - name: Run Safety (Python SCA)
