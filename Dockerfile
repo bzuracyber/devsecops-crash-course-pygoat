@@ -16,6 +16,13 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN apt-get update && apt-get install --no-install-recommends -y \
+      gcc \
+      libpq-dev \
+      python3-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 # Install pip and Python dependencies
 RUN python -m pip install --no-cache-dir pip==22.0.4
 COPY requirements.txt requirements.txt
